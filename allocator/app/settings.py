@@ -31,4 +31,3 @@ LIVING_SPACE_NAMES = (
     'Juniper',
     'Olive',
 )
-
