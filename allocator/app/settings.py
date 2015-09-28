@@ -3,31 +3,31 @@ App settings for Allocator.
 
 """
 
-RANDOMIZE_ALLOCATION = True
-GENDER_ISOLATION = True
+SEPERATE_ROLE_OFFICES = True
+SEPERATE_GENDER_LIVINGS = True
 
-OFFICE_SPACE_NAMES = (
-    'Carat',
-    'Crucible',
-    'Anvil',
-    'Forge',
-    'Kiln',
-    'Tongs',
-    'Gild',
-    'Furnace',
-    'Vice',
-    'Sledge_Hammer',
+OFFICE_SPACES = (
+    ('Carat','FELLOW'),
+    ('Crucible', 'FELLOW'),
+    ('Anvil', 'FELLOW'),
+    ('Forge', 'FELLOW'),
+    ('Kiln', 'FELLOW'),
+    ('Tongs', 'FELLOW'),
+    ('Gild', 'FELLOW'),
+    ('Furnace', 'STAFF'),
+    ('Vice', 'STAFF'),
+    ('Hammer', 'STAFF'),
 )
 
-LIVING_SPACE_NAMES = (
-    'Sapele',
-    'Maple',
-    'Iroko',
-    'Cedar',
-    'Mahoghany',
-    'Obeche',
-    'Willow',
-    'Balsam',
-    'Juniper',
-    'Olive',
+LIVING_SPACES = (
+    ('Sapele', 'F'),
+    ('Maple', 'F'),
+    ('Iroko', 'F'),
+    ('Cedar', 'F'),
+    ('Mahoghany', 'F'),
+    ('Obeche', 'M'),
+    ('Willow', 'M'),
+    ('Balsam', 'M'),
+    ('Juniper', 'M'),
+    ('Olive','M'),
 )

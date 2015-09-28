@@ -37,7 +37,7 @@ class Staff(Person):
     def __init__(self, name):
         
         # call the super __init__:
-        Person.__init__(self, name)
+        super(Staff, self).__init__(name)
 
         # set role:
         self.__role = Person.STAFF
@@ -49,7 +49,7 @@ class Staff(Person):
 
 
     def __repr__(self):
-        return "{} [{}]".format(self.name, self.role)
+        return "{} ({})".format(self.name, self.role)
 
 
 
@@ -63,32 +63,32 @@ class Fellow(Person):
     YES = 'Y'
     NO = 'N'
 
-    # class-level variables:
-    gender_aware = False
+    def __init__(self, name, wants_living, gender=None):
 
-
-    def __init__(self, name, **kwargs):
-
-         # call the super __init__:
-        Person.__init__(self, name)
+        # call the super __init__:
+        super(Fellow, self).__init__(name)
 
         # set role:
         self.__role = Person.FELLOW
 
-        # set the gender when required:
-        if Fellow.gender_aware:
-            gender = kwargs.get('gender')
-            if (gender == Fellow.MALE  or  gender == Fellow.FEMALE) :
-                self.__gender = gender
-            else:
-                raise ValueError("Invalid value provided for attribute 'gender'!")
-
-        # set the wants_living_space option:
-        wants_living_space = kwargs.get('wants_living_space')
-        if (wants_living_space == Fellow.YES  or wants_living_space == Fellow.NO) :
-            self.__wants_living_space = wants_living_space
+        # set the wants_living option:
+        if (
+            wants_living == Fellow.YES  or
+            wants_living == Fellow.NO
+        ):
+            self.__wants_living = wants_living
         else:
-            raise ValueError("Invalid value provided for attribute 'wants_living_space'!")
+            raise ValueError("Invalid value provided for attribute 'wants_living'!")
+
+        # set the gender when required:
+        if (
+            gender == Fellow.MALE    or  
+            gender == Fellow.FEMALE  or 
+            gender == None
+        ):
+            self.__gender = gender
+        else:
+            raise ValueError("Invalid value provided for attribute 'gender'!")
 
 
     @property
@@ -102,12 +102,13 @@ class Fellow(Person):
 
 
     @property
-    def wants_living_space(self):
-        return self.__wants_living_space
+    def wants_living(self):
+        return self.__wants_living
 
 
     def __repr__(self):
-        if Fellow.gender_aware:
-            return "{} [{} {}]".format(self.name, self.role, self.gender)
+
+        if self.gender == None:
+            return "{} ({})".format(self.name, self.role)
         else:
-            return "{} [{}]".format(self.name, self.role)
+            return "{} ({} {})".format(self.name, self.role, self.gender)
