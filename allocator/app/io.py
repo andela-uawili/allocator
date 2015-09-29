@@ -36,7 +36,7 @@ allocate_cmd_pattern = re.compile(
 )
 
 output_cmd_pattern = re.compile(
-    r"^(?P<query>(roomdir)|(teamdir))(\s+(?P<filters>(\s+|(os)|ls|(oss)|(osf)|lsm|lsf|c\+|c-|s|f|fm|ff|(o\+)|(o-)|l\+|l-)+))?(\s+:(?P<mode>o|a))?$"
+    r"^(?P<target>(roomdir)|(teamdir))(\s+(?P<filters>(\s+|(os)|ls|(oss)|(osf)|lsm|lsf|c\+|c-|s|f|fm|ff|(o\+)|(o-)|l\+|l-)+))?(\s+:(?P<mode>o|a))?$"
 )
 
 
@@ -46,7 +46,7 @@ output_cmd_pattern = re.compile(
 
 def parse_cmd_args(cmd_string, cmd_pattern):
 
-    cmd_string.strip()
+    cmd_string.strip().lower()
     match = cmd_pattern.match(cmd_string)
 
     if match:
@@ -58,7 +58,7 @@ def parse_cmd_args(cmd_string, cmd_pattern):
 
 def parse_person_input_line(input_line):
 
-    input_line = input_line.strip()
+    input_line = input_line.strip().upper()
     match = person_input_line_pattern.match(input_line)
 
     if match:
@@ -90,7 +90,7 @@ def process_person_input_batch(input_batch):
 
 def parse_room_input_line(input_line):
 
-    input_line = input_line.strip()
+    input_line = input_line.strip().upper()
     match = room_input_line_pattern.match(input_line)
 
     if match:
