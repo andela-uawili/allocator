@@ -4,7 +4,6 @@ from ..app.persons import Staff, Fellow
 from ..app.spaces import Room, OfficeSpace, LivingSpace
 
 
-
 class RoomTests(unittest.TestCase):
 
     def setUp(self):
@@ -48,7 +47,7 @@ class OfficeSpaceTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             OfficeSpace("JOHN DOE", occupant_role="binklmskl")
 
-    def test_add_occupants_adds_to_occupants_list(self):
+    def test_add_occupant_adds_to_occupants_list(self):
         room = OfficeSpace("CRUCIBLE")
         room.add_occupant(Staff("LAGBAJA"))
         self.assertEqual(len(room.occupants), 1)
@@ -58,18 +57,22 @@ class OfficeSpaceTests(unittest.TestCase):
             self.room.add_occupant(person)
         self.assertEqual(len(self.room.occupants), 6)
 
-    def test_add_occupants_adds_only_person_instances(self):
+    def test_add_occupant_adds_only_person_instances(self):
         room = OfficeSpace("CRUCIBLE")
         self.assertFalse(room.add_occupant("invalid value"))
 
-    def test_add_occupants_uses_occupant_role_if_specified(self):
+    def test_add_occupant_accepts_only_lists_of_persons(self):
+        room = OfficeSpace("CRUCIBLE")
+        self.assertFalse(room.add_occupants(65789))
+
+    def test_add_occupant_uses_occupant_role_if_specified(self):
         room = OfficeSpace("CRUCIBLE", occupant_role='STAFF')
         self.assertFalse(room.add_occupant(Fellow("JIM DOE", "N", gender="M")))
 
     def test_repr_returns_correct_values(self):
         self.room = OfficeSpace("CRUCIBLE")
         self.assertEqual(str(self.room), "CRUCIBLE (OFFICE)")
-        # test againwith occupant_role specified:
+        # test again with occupant_role specified:
         self.room = OfficeSpace("CRUCIBLE", occupant_role="STAFF")
         self.assertEqual(str(self.room), "CRUCIBLE (OFFICE STAFF)")
 
@@ -101,7 +104,7 @@ class LivingSpaceTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             LivingSpace("SAPELE", occupant_gender="dljskn")
 
-    def test_add_occupants_adds_to_occupants_list(self):
+    def test_add_occupant_adds_to_occupants_list(self):
         room = LivingSpace("SAPELE")
         room.add_occupant(Fellow("LAGBAJA", "Y"))
         self.assertEqual(len(room.occupants), 1)
@@ -111,21 +114,26 @@ class LivingSpaceTests(unittest.TestCase):
             self.room.add_occupant(person)
         self.assertEqual(len(self.room.occupants), 4)
 
-    def test_add_occupants_adds_only_fellow_instances(self):
+    def test_add_occupant_adds_only_fellow_instances(self):
         room = LivingSpace("SAPELE")
         self.assertFalse(room.add_occupant(Staff("OSADEBE")))
 
-    def test_add_occupants_adds_only_fellows_with_want_living_yes(self):
+    def test_add_occupants_accepts_only_lists_of_persons(self):
+        room = OfficeSpace("CRUCIBLE")
+        self.assertFalse(room.add_occupants(65789))
+
+    def test_add_occupant_adds_only_fellows_with_want_living_yes(self):
         room = LivingSpace("SAPELE")
         self.assertFalse(room.add_occupant(Fellow("OSADEBE", "N")))
 
-    def test_add_occupants_uses_occupant_gender_if_specified(self):
+    def test_add_occupant_uses_occupant_gender_if_specified(self):
         room = LivingSpace("SAPELE", occupant_gender='F')
         self.assertFalse(room.add_occupant(Fellow("JIM DOE", "N", gender="M")))
 
     def test_repr_returns_correct_values(self):
         self.room = LivingSpace("SAPELE")
         self.assertEqual(str(self.room), "SAPELE (LIVING)")
+        
         # test again with occupant_role specified:
         self.room = LivingSpace("SAPELE", occupant_gender="F")
         self.assertEqual(str(self.room), "SAPELE (LIVING F)")

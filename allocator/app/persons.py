@@ -1,5 +1,4 @@
-"""
-This module defines all person related classes.
+"""This module defines all person related classes.
 
 """
 
@@ -20,14 +19,28 @@ class Person(object):
         else:
             raise TypeError("'name' parameter must be a string!")
 
-
-    def __repr__(self):
-        return self.name
+        # initialize space allocations to None:
+        self.office_space = None
+        self.living_space = None
 
     @property
     def name(self):
         return self.__name
 
+    @property
+    def role(self):
+        return None
+
+    @property
+    def gender(self):
+        return None
+
+    @property
+    def wants_living(self):
+        return None
+
+    def __repr__(self):
+        return self.name
 
 
 
@@ -50,7 +63,6 @@ class Staff(Person):
 
     def __repr__(self):
         return "{} ({})".format(self.name, self.role)
-
 
 
 

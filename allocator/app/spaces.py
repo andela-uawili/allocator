@@ -26,6 +26,25 @@ class Room(object):
         self.__occupants = []
 
 
+    def add_occupant(self, person):
+        """ Adds a person to the room's occupants list.
+        Sublasses overide this method """
+        
+        return None
+
+    def add_occupants(self, persons):
+        """ Adds a list of persons to the room's occupants list.
+        Sublasses overide this method """
+
+        if not isinstance(persons, list):
+            return False
+
+        for person in persons:
+            self.add_occupant(person)
+
+        return True
+
+
     def __repr__(self):
         return self.name
 
@@ -34,11 +53,17 @@ class Room(object):
     def name(self):
         return self.__name
 
-
     @property
     def occupants(self):
         return self.__occupants
 
+    @property
+    def occupant_role(self):
+        return None
+
+    @property
+    def occupant_gender(self):
+        return None
 
 
 
@@ -103,7 +128,6 @@ class OfficeSpace(Room):
             return "{} ({})".format(self.name, self.purpose)
         else:
             return "{} ({} {})".format(self.name, self.purpose, self.occupant_role)
-
 
 
 

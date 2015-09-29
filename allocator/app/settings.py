@@ -3,31 +3,8 @@ App settings for Allocator.
 
 """
 
-SEPERATE_ROLE_OFFICES = True
-SEPERATE_GENDER_LIVINGS = True
+SEPERATE_ROLE_OFFICE_SPACES = '-r'
 
-OFFICE_SPACES = (
-    ('Carat','FELLOW'),
-    ('Crucible', 'FELLOW'),
-    ('Anvil', 'FELLOW'),
-    ('Forge', 'FELLOW'),
-    ('Kiln', 'FELLOW'),
-    ('Tongs', 'FELLOW'),
-    ('Gild', 'FELLOW'),
-    ('Furnace', 'STAFF'),
-    ('Vice', 'STAFF'),
-    ('Hammer', 'STAFF'),
-)
+SEPERATE_GENDER_LIVING_SPACES = '-g'
 
-LIVING_SPACES = (
-    ('Sapele', 'F'),
-    ('Maple', 'F'),
-    ('Iroko', 'F'),
-    ('Cedar', 'F'),
-    ('Mahoghany', 'F'),
-    ('Obeche', 'M'),
-    ('Willow', 'M'),
-    ('Balsam', 'M'),
-    ('Juniper', 'M'),
-    ('Olive','M'),
-)
+OUTPUT_HEADER_DEMARC = "================================================================"
