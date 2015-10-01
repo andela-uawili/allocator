@@ -1,39 +1,53 @@
 # allocator
-Room allocation system for Andela's Amity.
+OFFICE SPACE ALLOCATION SYSTEM (for Andela's Amity)
 
+Description:    Python program to allocate people to rooms in Amity.
+Author:         Awili Uzochikwa Young (uzo.awili@andela.com).
+Python Verson:  2.7.10
+
+
+INSTALLATION:
+
+Simply save the package to any directory on your PC from which you can run python. Run 'pip install -r requirements.txt' to install all dependencies. Finally run allocator.py and voila! Start allocating! The program is should guide you from there but if not, feel free to use the help command anytime. 
+
+To run the application's test suite, simple do 'nosetests' in the root package or 'nosetests --with-coverage' to test with coverage reports.
+
+
+USAGE:
 
 This application runs as a command interpreter. See below for the list of commands and their usage.
 
-Typically you will want to start by loading or inputing data for teams and rooms. (NOTE: There are defaults for this, you only need call the commands once).
+Typically you will want to start by loading or inputing data for teams and rooms. (NOTE: There are defaults for this, you only need call the bare minimum commands without any arguments).
 Next you run the 'allocate' command to allocate person to rooms.
-Finally you can query for room or team allocation data and print it to console or to a file.
+Finally you can query for room or team allocation data and 'print' it to the console or 'save' to a file.
 
 
+COMMANDS     OPTIONS
 
-COMMAND     OPTIONS:
 
+load:       Loads data from text files to populate either the 'team' or 'rooms'.
 
-load        Loads data from text files to populate either the 'team' or 'rooms'.
+            Use the format: load  [<target>(team|rooms)  ['<filepath>'] ]  [<mode>(:o|:a)]
 
-            Use the format: load  <target>(team|rooms)  ['<filepath>']   [<mode>(:o|:a)] 
+            target:     The target data to populate. Either 'team' or 'rooms'.
+                        Note that although <target> is optional, the other options have no effect unless it is specified.
+                        calling load without target loads both rooms and teams with the default filepath and mode settings.
 
-            target:     Target data to populate. Either 'team' or 'rooms'.
-
-            filepath:   Optional path to the input file wrapped in single-quotes ''.
+            filepath:   Optional. Path to the input file wrapped in single-quotes ''.
                         Can be absolute or relative. 
-                        Defaults to '/data/input_persons.txt' for team 
-                        and '/data/input_rooms.txt' for rooms.
+                        Defaults to '/data/input_persons_ext.txt' for team 
+                        and '/data/input_rooms_ext.txt' for rooms.
 
-            mode:       Optionally specifies how the data is added to target. 
+            mode:       Optional. Specifies how the data is added to target. 
                         ':o' to overwrite previously loaded data.
                         ':a' to append to previously loaded data.
                         Defaults to ':o'.
             
-            e.g.        load team '/data/input_persons.txt' :a
+            e.g.        load team './data/input_persons_ext.txt' :a
                         load rooms
 
 
-input       Collects data from command line to populate either the 'team' or 'rooms'.
+input:      Collects data from command line to populate either the 'team' or 'rooms'.
 
             Use the format: input  <target>(team|rooms)  '<cslist>'   [<mode>(:o|:a)] 
             
@@ -42,7 +56,7 @@ input       Collects data from command line to populate either the 'team' or 'ro
             cslist:     Comma seperated list of input lines for persons or rooms.
                         Wrapped in single-quotes ''.
 
-            mode:       Optionally specifies how the data is added to target. 
+            mode:       Optional. Specifies how the data is added to target. 
                         ':o' to overwrite previously loaded data.
                         ':a' to append to previously loaded data.
                         Defaults to ':a'.
@@ -51,17 +65,17 @@ input       Collects data from command line to populate either the 'team' or 'ro
                         input room 'HAMMER  OFFICE  STAFF, SAPELE LIVING F'
 
 
-allocate    Allocates persons to rooms using optional or default conditions.
+allocate:   Allocates persons to rooms using optional or default constraints.
 
             Use the format: allocate  [<sep_gender>(g+|g-)]  [<sep_roles>(r+|r-)]
             
-            sep_gender: Optionally Specify whether genders should be separated when allocating 
+            sep_gender: Optional. Specifies whether genders should be separated when allocating 
                         fellows to living spaces.
                         'g+' to seperate genders.
                         'g-' to allow different genders to share living spaces. lol...in your dreams ;)
                         Defaults to 'g+'.
 
-            sep_roles: Optionally Specify whether roles (staff and fellows) should be separated 
+            sep_roles: Optional. Specifies whether roles (staff and fellows) should be separated 
                         when allocating persons to office spaces.
                         'r+' to seperate roles.
                         'r-' to allow staff and fellows to share office spaces. Not bad huh?
@@ -71,36 +85,35 @@ allocate    Allocates persons to rooms using optional or default conditions.
                         allocate
 
 
-print       Outputs team or room data to the console. Filter options are available.
+print:      Outputs team or room data to the console. Filter options are available.
 
-            Use the format: print  <target>(team|room)  [<filters>(any combination from the list below)] 
+            Use the format: print  <target>(team|room)  [<filters>(see the list below)] 
             
             target:     Target data to output. Either 'team' or 'rooms'.
             
-            filters:    Optionally filters the output using combinations of these conditions:
+            filters:    Optional. Filters the output using combinations of constraints:
+                        
+                        ROOM FILTERS (combine any of these. option seperated by '|' should not be combined ):
 
-                        os      office spaces
-                        oss     office spaces for staff
-                        osf     office spaces for fellows
-                        ls      living spaces
-                        lsm     living spaces for males
-                        lsf     living spaces for females
-                        c+      rooms with full capacity
-                        c-      rooms below full capacity
-                        s       staff
-                        f       fellows
-                        fm      fellows that are male
-                        ff      fellows that are female
-                        o+      persons with office space
-                        o-      persons without office space
-                        l+      persons with living space
-                        l-      persons without living space
-            
-            e.g.        print rooms osf c-    # prints office-spaces for fellows that are not yet filled to capacity.
-                        print team ff l-      # prints female fellows that have not been alloctaed living spaces.
+                        os|ls             office spaces | living spaces 
+                        st|fw             for staff| for fellows
+                        ml|fm             for males | for females
+                        oc+|oc-           has occupants | no occupants
+                        cf+|cf-           is full capacity | not full capacity
+
+                        TEAM FILTERS (combine any of these):
+
+                        st|fw             staff|fellows
+                        ml|fm             male | female    
+                        o+|o-             have office space | don't have space
+                        l+|l-             have living space | don't have living space
+                        w+|w-             want living space | don't want living space
+                                        
+            e.g.        print rooms os fw c+      # print office-spaces for fellows that are filled to capacity.
+                        print team fw fm w+ l-    # print female fellows that want but have not been allocated living spaces.
 
 
-save        Outputs team or room data to a file. Filter options are available.
+save:       Outputs team or room data to a file. Filter options are available.
 
             Use the format: save  <target>(team|room) [<filters>(any combination from the list below)] ['<filepath>'] [<mode>(:o|:a)]
             
@@ -110,26 +123,12 @@ save        Outputs team or room data to a file. Filter options are available.
 
             filepath:   Optional path to the output file wrapped in single-quotes ''.
                         Can be absolute or relative. 
-                        Defaults to '/data/output.txt'.
+                        Defaults to './data/output.txt'.
 
             mode:       Optionally specifies how the data is written to file. 
                         ':o' to overwrite previous saved content.
                         ':a' to append to previously saved content.
                         Defaults to ':o'.
             
-            e.g.        save rooms osf c- '/data/input_persons.txt' :a
-                        save team ff l-target:     same as in 'print' command.
-            
-            filter:     same as in 'print' command.
-
-            filepath:   Optional path to the output file wrapped in single-quotes ''.
-                        Can be absolute or relative. 
-                        Defaults to '/data/output.txt'.
-
-            mode:       Optionally specifies how the data is written to file. 
-                        ':o' to overwrite previous saved content.
-                        ':a' to append to previously saved content.
-                        Defaults to ':o'.
-            
-            e.g.        save rooms osf c- '/data/input_persons.txt' :a
-                        save team ff l-
+            e.g.        save rooms os fw c- '/data/output.txt' :a
+                        save team fw ml l-

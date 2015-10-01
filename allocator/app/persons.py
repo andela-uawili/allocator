@@ -1,43 +1,34 @@
-"""This module defines all person related classes.
+"""
+This module defines all person related classes.
 
 """
 
+import settings
+
 
 class Person(object):
-    """docstring for Person"""
+    """
+    Base class for the persons module classes. 
+    Implements functionality shared by the other person classes
+    but is never instantiated by itself in the program.
 
-    # class-level pseudo-constants:
-    STAFF = 'STAFF'
-    FELLOW = 'FELLOW'
-
+    """
 
     def __init__(self, name):
 
         # set name attribute:
         if(isinstance(name, str)):
-            self.__name = name
+            self.name = name
         else:
             raise TypeError("'name' parameter must be a string!")
 
-        # initialize space allocations to None:
+        self.role = None
+        self.gender = None
+        self.wants_living = None
+
+        # initialize space allocations:
         self.office_space = None
         self.living_space = None
-
-    @property
-    def name(self):
-        return self.__name
-
-    @property
-    def role(self):
-        return None
-
-    @property
-    def gender(self):
-        return None
-
-    @property
-    def wants_living(self):
-        return None
 
     def __repr__(self):
         return self.name
@@ -45,78 +36,55 @@ class Person(object):
 
 
 class Staff(Person):
-    """docstring for Staff"""
+    """
+    Class representing persons that are staff. 
+    Staff cannot be assigned to living spaces.
+
+    """
 
     def __init__(self, name):
         
-        # call the super __init__:
         super(Staff, self).__init__(name)
-
-        # set role:
-        self.__role = Person.STAFF
-
-
-    @property
-    def role(self):
-        return self.__role
-
+        self.role = settings.STAFF
 
     def __repr__(self):
+
         return "{} ({})".format(self.name, self.role)
 
 
 
 class Fellow(Person):
-    """docstring for Fellow"""
+    """
+    Class representing person that are Fellows. 
+    Fellows can be assigned living spaces if they 
+    so choose. And may have their gender defined in the input data.
 
-    # class-level pseudo-constants:
-    MALE = 'M'
-    FEMALE = 'F'
-    YES = 'Y'
-    NO = 'N'
+    """
+
 
     def __init__(self, name, wants_living, gender=None):
 
-        # call the super __init__:
         super(Fellow, self).__init__(name)
-
-        # set role:
-        self.__role = Person.FELLOW
+        self.role = settings.FELLOW
 
         # set the wants_living option:
         if (
-            wants_living == Fellow.YES  or
-            wants_living == Fellow.NO
+            wants_living == settings.YES  or
+            wants_living == settings.NO
         ):
-            self.__wants_living = wants_living
+            self.wants_living = wants_living
         else:
             raise ValueError("Invalid value provided for attribute 'wants_living'!")
 
         # set the gender when required:
         if (
-            gender == Fellow.MALE    or  
-            gender == Fellow.FEMALE  or 
+            gender == settings.MALE    or  
+            gender == settings.FEMALE  or 
             gender == None
         ):
-            self.__gender = gender
+            self.gender = gender
         else:
             raise ValueError("Invalid value provided for attribute 'gender'!")
-
-
-    @property
-    def role(self):
-        return self.__role
-
-
-    @property
-    def gender(self):
-        return self.__gender
-
-
-    @property
-    def wants_living(self):
-        return self.__wants_living
-
 
     def __repr__(self):
 

@@ -1,7 +1,9 @@
 import unittest
 from mock import patch, MagicMock
 import __builtin__ as builtins
+import os.path
 
+from ..app import settings
 from ..app import io
 from ..app.persons import Person, Staff, Fellow
 from ..app.spaces import Room, OfficeSpace, LivingSpace
@@ -10,39 +12,51 @@ from ..app.spaces import Room, OfficeSpace, LivingSpace
 class CommandArgsParsingTest(unittest.TestCase):
 
     def test_load_command_parses_correctly(self):
-    	cmd_args = io.parse_cmd_args("'/data/input.txt' :a", io.load_cmd_pattern)
-    	self.assertNotEqual(cmd_args, None)
-    	self.assertEqual(cmd_args.get('filepath'), '/data/input.txt')
-    	self.assertEqual(cmd_args.get('mode'), 'a')
+        cmd_args = io.parse_cmd_args("rooms './data/input.txt' :a", io.load_cmd_pattern)
+        self.assertNotEqual(cmd_args, None)
+        self.assertEqual(cmd_args.get('target'), 'rooms')
+        self.assertEqual(cmd_args.get('filepath'), './data/input.txt')
+        self.assertEqual(cmd_args.get('mode'), 'a')
 
+    def test_load_command_parses_correctly_without_args(self):
+        cmd_args = io.parse_cmd_args("", io.load_cmd_pattern)
+        self.assertNotEqual(cmd_args, None)
+        self.assertEqual(cmd_args.get('target'), None)
+        self.assertEqual(cmd_args.get('filepath'), None)
+        self.assertEqual(cmd_args.get('mode'), None)
 
     def test_input_command_parses_correctly(self):
-    	cmd_args = io.parse_cmd_args("'AWILI UZO  FELLOW Y M, TOSIN ADE  STAFF' :o", io.input_cmd_pattern)
-    	self.assertNotEqual(cmd_args, None)
-    	self.assertEqual(cmd_args.get('cslist'), 'AWILI UZO  FELLOW Y M, TOSIN ADE  STAFF')
-    	self.assertEqual(cmd_args.get('mode'), 'o')
+        cmd_args = io.parse_cmd_args("team 'AWILI UZO  FELLOW Y M, TOSIN ADE  STAFF' :o", io.input_cmd_pattern)
+        self.assertNotEqual(cmd_args, None)
+        self.assertEqual(cmd_args.get('target'), 'team')
+        self.assertEqual(cmd_args.get('cslist'), 'AWILI UZO  FELLOW Y M, TOSIN ADE  STAFF')
+        self.assertEqual(cmd_args.get('mode'), 'o')
 
+    def test_allocate_command_parses_correctly_without_args(self):
+        cmd_args = io.parse_cmd_args("", io.allocate_cmd_pattern)
+        self.assertNotEqual(cmd_args, None)
+        self.assertEqual(cmd_args.get('gender_constraint'), None)
+        self.assertEqual(cmd_args.get('role_constraint'), None)
 
     def test_allocate_command_parses_correctly(self):
-    	cmd_args = io.parse_cmd_args("r- g+", io.allocate_cmd_pattern)
-    	self.assertNotEqual(cmd_args, None)
-    	self.assertEqual(cmd_args.get('sep_gender'), 'g+')
-    	self.assertEqual(cmd_args.get('sep_roles'), 'r-')
-
+        cmd_args = io.parse_cmd_args("r- g+", io.allocate_cmd_pattern)
+        self.assertNotEqual(cmd_args, None)
+        self.assertEqual(cmd_args.get('gender_constraint'), 'g+')
+        self.assertEqual(cmd_args.get('role_constraint'), 'r-')
 
     def test_print_command_parses_correctly(self):
-    	cmd_args = io.parse_cmd_args("roomdir osf c-", io.output_cmd_pattern)
-    	self.assertNotEqual(cmd_args, None)
-    	self.assertEqual(cmd_args.get('query'), 'roomdir')
-    	self.assertEqual(cmd_args.get('filters'), 'osf c-')
-
+        cmd_args = io.parse_cmd_args("rooms os fw cf-", io.output_cmd_pattern)
+        self.assertNotEqual(cmd_args, None)
+        self.assertEqual(cmd_args.get('target'), 'rooms')
+        self.assertEqual(cmd_args.get('filters'), 'os fw cf-')
 
     def test_save_command_parses_correctly(self):
-    	cmd_args = io.parse_cmd_args("teamdir lsf c+ :o", io.output_cmd_pattern)
-    	self.assertNotEqual(cmd_args, None)
-    	self.assertEqual(cmd_args.get('query'), 'teamdir')
-    	self.assertEqual(cmd_args.get('filters'), 'lsf c+')
-    	self.assertEqual(cmd_args.get('mode'), 'o')
+        cmd_args = io.parse_cmd_args("team fw fm   w+ l- './data/output.txt' :o", io.output_cmd_pattern)
+        self.assertNotEqual(cmd_args, None)
+        self.assertEqual(cmd_args.get('target'), 'team')
+        self.assertEqual(cmd_args.get('filters'), 'fw fm   w+ l-')
+        self.assertEqual(cmd_args.get('filepath'), './data/output.txt')
+        self.assertEqual(cmd_args.get('mode'), 'o')
 
 
 
@@ -52,16 +66,16 @@ class ParsePersonInputTest(unittest.TestCase):
         self.input_batch = [
             "ANDREW PHILLIPS         FELLOW      Y       ",
             "       MATTHEW O'CONNOR        STAFF",
-            "JOHN ADEWALE            FELLOW      N       M",
-            "IYANU ALIMI             FELLOW      Y       F",
-            "AHMED AKUBE             STAFF",
+            "JOHN ADEWALE            FELLOW      N       M   ",
+            "   IYANU ALIMI             FELLOW      Y       F ",
+            " AHMED AKUBE             STAFF",
         ]
 
     def test_person_input_processes_correctly(self):
-    	person_list = io.process_person_input_batch(self.input_batch)
+        person_list = io.process_person_input_batch(self.input_batch)
         self.assertNotIn(None, person_list)
-    	self.assertEqual(person_list[2].name, 'JOHN ADEWALE')
-    	self.assertEqual(person_list[2].role, 'FELLOW')
+        self.assertEqual(person_list[2].name, 'JOHN ADEWALE')
+        self.assertEqual(person_list[2].role, 'FELLOW')
         self.assertEqual(person_list[2].wants_living, 'N')
         self.assertEqual(person_list[2].gender, 'M')
 
@@ -74,7 +88,7 @@ class ParseRoomInputTest(unittest.TestCase):
             "   CARAT           OFFICE        FELLOW   ",
             "TONGS           OFFICE        FELLOW",
             "   FURNACE         OFFICE        STAFF",
-            "HAMMER          OFFICE        STAFF",
+            "   HAMMER          OFFICE        STAFF",
             "SAPELE          LIVING             F",
             "   MAPLE           LIVING      F",
             "CEDAR           LIVING       M",
@@ -152,28 +166,28 @@ class ReadFileInputTest(unittest.TestCase):
 
     def setUp(self):
         self.mock_file_object = MagicMock()
-        self.mock_file_object.readlines = MagicMock(return_value=["NNADI NADAYAR STAFF", "TOM 'N' JERRY FELLOW"])
+        self.mock_file_object.readlines = MagicMock(return_value=["   ","NNADI NADAYAR STAFF", "TOM 'N' JERRY FELLOW"])
         # self.mock_file_object.close = MagicMock()
         
     @patch.object(builtins, 'open')
     def test_target_file_is_opened_correctly(self, mock_open):
         
         mock_open.return_value = self.mock_file_object
-        lines = io.read_input_lines_from_file("/data/input_persons.txt")
-        mock_open.assert_called_with("/data/input_persons.txt", 'r')
+        lines = io.read_input_lines_from_file("./data/input_persons.txt")
+        mock_open.assert_called_with(os.path.abspath("./data/input_persons.txt"), 'r')
 
 
     @patch.object(builtins, 'open')
     def test_file_input_is_read_correctly(self, mock_open):
         
         mock_open.return_value = self.mock_file_object
-        lines = io.read_input_lines_from_file("/data/input_persons.txt")
+        lines = io.read_input_lines_from_file("./data/input_persons.txt")
         self.mock_file_object.readlines.assert_any_call()
         self.assertEqual(len(lines), 2)
 
 
 
-class ReadFileOutputTest(unittest.TestCase):
+class WriteFileOutputTest(unittest.TestCase):
 
     def setUp(self):
         self.mock_file_object = MagicMock()
@@ -183,13 +197,13 @@ class ReadFileOutputTest(unittest.TestCase):
     def test_target_file_is_opened_correctly(self, mock_open):
         
         mock_open.return_value = self.mock_file_object
-        io.write_output_to_file("Test Output", "/data/output_persons.txt", True)
-        mock_open.assert_called_with("/data/output_persons.txt", 'a')
+        io.write_output_to_file("Test Output", "./data/output.txt", True)
+        mock_open.assert_called_with(os.path.abspath("./data/output.txt"), 'a')
 
 
     @patch.object(builtins, 'open')
     def test_file_output_is_written_to_correctly(self, mock_open):
         
         mock_open.return_value = self.mock_file_object
-        io.write_output_to_file("Test Output", "/data/output_persons.txt", True)
+        io.write_output_to_file("Test Output", "./data/output.txt", True)
         self.mock_file_object.write.assert_called_with("Test Output")

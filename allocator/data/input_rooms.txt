@@ -1,20 +1,20 @@
-CARAT           OFFICE        FELLOW
-CRUCIBLE        OFFICE        FELLOW
-ANVIL           OFFICE        FELLOW
-FORGE           OFFICE        FELLOW
-KILN            OFFICE        FELLOW
-TONGS           OFFICE        FELLOW
-GILD            OFFICE        FELLOW
-FURNACE         OFFICE        STAFF
-VICE            OFFICE        STAFF
-HAMMER          OFFICE        STAFF
-SAPELE          LIVING                        F
-MAPLE           LIVING                        F
-IROKO           LIVING                        F
-CEDAR           LIVING                        M
-MAHOGHANY       LIVING                        M
-OBECHE          LIVING                        M
-WILLOW          LIVING                        M
-BALSAM          LIVING                        M
-JUNIPER         LIVING                        M
-OLIVE           LIVING                        M
+CARAT           OFFICE
+CRUCIBLE        OFFICE
+ANVIL           OFFICE
+FORGE           OFFICE
+KILN            OFFICE
+TONGS           OFFICE
+GILD            OFFICE
+FURNACE         OFFICE
+VICE            OFFICE
+HAMMER          OFFICE
+SAPELE          LIVING
+MAPLE           LIVING
+IROKO           LIVING
+CEDAR           LIVING
+MAHOGHANY       LIVING
+OBECHE          LIVING
+WILLOW          LIVING
+BALSAM          LIVING
+JUNIPER         LIVING
+OLIVE           LIVING

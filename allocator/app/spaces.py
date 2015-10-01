@@ -3,34 +3,52 @@ This module defines all room/space related classes.
 
 """
 
+import settings
 from persons import Person, Fellow
 
 
 class Room(object):
-    """docstring for Room"""
+    """
+    Base class for the spaces module classes. 
+    Implements functionality shared by the other space/room classes
+    but is never instantiated by itself in the program.
 
-    # class-level pseudo-constants:
-    LIVING = 'LIVING'
-    OFFICE = 'OFFICE'
+    """
 
+    # class-level variables:
+    max_occupants = None
+    
 
     def __init__(self, name):
 
-        # set name attribute:
+        # set attribute:
         if(isinstance(name, str)):
-            self.__name = name
+            self.name = name
         else:
             raise TypeError("'name' parameter must be a string!")
 
-        # init the occupants list
-        self.__occupants = []
-
-
+        self.occupants = None
+        self.purpose = None
+        self.occupant_role = None
+        self.occupant_gender = None
+        self.occupants = []
+    
     def add_occupant(self, person):
         """ Adds a person to the room's occupants list.
-        Sublasses overide this method """
+        Returns true if successful, False if not. """
         
-        return None
+        # ensure the room isn't over-allocated:
+        if self.max_occupants and (len(self.occupants) >= self.max_occupants): 
+            return False
+        
+        # ensure to add only Persons:
+        if not isinstance(person, Person):
+            return False
+       
+        # add person to occupant list and return:
+        self.occupants.append(person)
+
+        return True
 
     def add_occupants(self, persons):
         """ Adds a list of persons to the room's occupants list.
@@ -44,32 +62,26 @@ class Room(object):
 
         return True
 
+    @property
+    def is_full(self):
+        if len(self.occupants) < self.max_occupants:
+            return False
+        else:
+            return True
 
     def __repr__(self):
         return self.name
 
 
-    @property
-    def name(self):
-        return self.__name
-
-    @property
-    def occupants(self):
-        return self.__occupants
-
-    @property
-    def occupant_role(self):
-        return None
-
-    @property
-    def occupant_gender(self):
-        return None
-
-
 
 class OfficeSpace(Room):
-    """docstring for OfficeSpace"""
+    """
+    Class representing rooms to be used as office spaces. 
+    Can take a maximum of 6 occupants and may also restrict 
+    them to a particular role (Staff or Fellow) depending on
+    the format of the input data.
 
+    """
     # class-level variables:
     max_occupants = 6
 
@@ -79,61 +91,34 @@ class OfficeSpace(Room):
         super(OfficeSpace, self).__init__(name)
 
         # set purpose:
-        self.__purpose = Room.OFFICE
+        self.purpose = settings.OFFICE
 
-        # set the occupant_role when required:
+        # set the occupant_role:
         if (
-            occupant_role == Person.STAFF   or  
-            occupant_role == Person.FELLOW  or 
+            occupant_role == settings.STAFF   or  
+            occupant_role == settings.FELLOW  or 
             occupant_role == None
         ):
-            self.__occupant_role = occupant_role
+            self.occupant_role = occupant_role
         else:
             raise ValueError("Invalid value provided for attribute 'occupant_role'!")
-
-
-    def add_occupant(self, person):
-        """ Adds a person to the room's occupants list.
-        Returns true if successful, False if not. """
-        
-        # ensure the room isn't over-allocated:
-        if len(self.occupants) >= OfficeSpace.max_occupants: 
-            return False
-        
-        # ensure to add only Persons:
-        if not (isinstance(person, Person)):
-            return False
-        
-        # ensure correct occupant_role if specified:
-        if not (self.__occupant_role == None or person.role == self.__occupant_role):
-            return False
-        
-        # add person to occupant list and return:
-        self.occupants.append(person)
-        return True
-
-
-    @property
-    def purpose(self):
-        return self.__purpose
-
-
-    @property
-    def occupant_role(self):
-        return self.__occupant_role
-
 
     def __repr__(self):
         if self.occupant_role == None:
             return "{} ({})".format(self.name, self.purpose)
         else:
-            return "{} ({} {})".format(self.name, self.purpose, self.occupant_role)
+            return "{} ({} {})".format(self.name, self.purpose, self.occupant_role[0:2])
 
 
 
 class LivingSpace(Room):
-    """docstring for LivingSpace"""
+    """
+    Class representing rooms to be used as living spaces. 
+    Can take a maximum of 4 occupants and may also restrict 
+    them to a particular gender (Male or Female) depending on
+    the format of the input data.
 
+    """
     # class-level variables:
     max_occupants = 4
 
@@ -144,57 +129,21 @@ class LivingSpace(Room):
         super(LivingSpace, self).__init__(name)
 
         # set purpose:
-        self.__purpose = Room.LIVING
+        self.purpose = settings.LIVING
 
-        # set the occupant_gender when required:
+        # set the occupant_gender:
         if (
-            occupant_gender == Fellow.MALE    or  
-            occupant_gender == Fellow.FEMALE  or 
+            occupant_gender == settings.MALE    or  
+            occupant_gender == settings.FEMALE  or 
             occupant_gender == None
         ):
-            self.__occupant_gender = occupant_gender
+            self.occupant_gender = occupant_gender
         else:
             raise ValueError("Invalid value provided for attribute 'occupant_gender'!")
-
-
-    def add_occupant(self, person):
-        """ Adds a person to the room's occupants list.
-        Returns true if successful, False if not. """
-        
-        # ensure the room isn't over-allocated:
-        if len(self.occupants) >= LivingSpace.max_occupants: 
-            return False
-        
-        # ensure to add only Fellows:
-        if not isinstance(person, Fellow):
-            return False
-
-        # ensure to add only Fellows with wants_living as Yes:
-        if not (person.wants_living == Fellow.YES):
-            return False
-
-        # ensure correct occupant_gender if specified:
-        if not (self.__occupant_gender == None or person.gender == self.__occupant_gender):
-            return False
-       
-        # add person to occupant list and return:
-        self.occupants.append(person)
-        return True
-
-
-    @property
-    def purpose(self):
-        return self.__purpose
-
-
-    @property
-    def occupant_gender(self):
-        return self.__occupant_gender
-
 
     def __repr__(self):
 
         if self.occupant_gender == None:
             return "{} ({})".format(self.name, self.purpose)
         else:
-            return "{} ({} {})".format(self.name, self.purpose, self.occupant_gender)
+            return "{} ({} {})".format(self.name, self.purpose, self.occupant_gender[0:2])
