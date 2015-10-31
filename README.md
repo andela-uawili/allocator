@@ -1,50 +1,56 @@
-# allocator
-OFFICE SPACE ALLOCATION SYSTEM (for Andela's Amity)
-
-Description:    Python program to allocate people to rooms in Amity.
-Author:         Awili Uzochikwa Young (uzo.awili@andela.com).
-Python Verson:  2.7.10
+# Allocator
+Python program to allocate people to rooms in Andela's Amity.
 
 
-INSTALLATION:
+## Installation:
 
-Simply save the package to any directory on your PC from which you can run python. Run 'pip install -r requirements.txt' to install all dependencies. Finally run allocator.py and voila! Start allocating! The program is should guide you from there but if not, feel free to use the help command anytime. 
+1. Clone the repo to any directory on your PC from which you can run python (preferrably with a virtual environment). 
+2. Run ```pip install -r requirements.txt``` to install all dependencies.
+3. Finally run ```python allocator.py``` and voila! Start allocating! 
 
-To run the application's test suite, simple do 'nosetests' in the root package or 'nosetests --with-coverage' to test with coverage reports.
-
-
-USAGE:
-
-This application runs as a command interpreter. See below for the list of commands and their usage.
-
-Typically you will want to start by loading or inputing data for teams and rooms. (NOTE: There are defaults for this, you only need call the bare minimum commands without any arguments).
-Next you run the 'allocate' command to allocate person to rooms.
-Finally you can query for room or team allocation data and 'print' it to the console or 'save' to a file.
+The program is should guide you from there but if not, feel free to use the help command anytime. 
 
 
-COMMANDS     OPTIONS
+## Testing
+
+* Run the following command in the root program's root package.   
+```nosetests```  
+* To test with coverage reports.   
+``` nosetests --with-coverage --cover-package=allocator ```   
 
 
-load:       Loads data from text files to populate either the 'team' or 'rooms'.
+## Usage:
+This application runs as a command interpreter.
 
-            Use the format: load  [<target>(team|rooms)  ['<filepath>'] ]  [<mode>(:o|:a)]
+1. Typically you will want to start by loading or inputing data for teams and rooms. (NOTE: There are defaults for this, you only need call the bare minimum commands without any arguments).
+2. Next you run the 'allocate' command to allocate person to rooms.
+3. Finally you can query for room or team allocation data and 'print' it to the console or 'save' to a file.
 
-            target:     The target data to populate. Either 'team' or 'rooms'.
-                        Note that although <target> is optional, the other options have no effect unless it is specified.
-                        calling load without target loads both rooms and teams with the default filepath and mode settings.
 
-            filepath:   Optional. Path to the input file wrapped in single-quotes ''.
-                        Can be absolute or relative. 
-                        Defaults to '/data/input_persons_ext.txt' for team 
-                        and '/data/input_rooms_ext.txt' for rooms.
+## Commands:
+See below for the list of commands and their usage:
 
-            mode:       Optional. Specifies how the data is added to target. 
-                        ':o' to overwrite previously loaded data.
-                        ':a' to append to previously loaded data.
-                        Defaults to ':o'.
-            
-            e.g.        load team './data/input_persons_ext.txt' :a
-                        load rooms
+#### load        
+Loads data from text files to populate either the 'team' or 'rooms'.   
+Use the format: ```load  [<target>(team|rooms)  ['<filepath>'] ]  [<mode>(:o|:a)]```   
+
+target|     The target data to populate. Either 'team' or 'rooms'.   
+            Note that although <target> is optional, the other options have no effect unless it is specified.   
+            calling load without target loads both rooms and teams with the default filepath and mode settings.   
+
+filepath|   Optional. Path to the input file wrapped in single-quotes ''.   
+            Can be absolute or relative.    
+            Defaults to '/data/input_persons_ext.txt' for team    
+            and '/data/input_rooms_ext.txt' for rooms.   
+
+mode|       Optional. Specifies how the data is added to target. 
+            ':o' to overwrite previously loaded data.
+            ':a' to append to previously loaded data.
+            Defaults to ':o'.
+
+__Examples:__        
+```load team './data/input_persons_ext.txt' :a```   
+```load rooms```  
 
 
 input:      Collects data from command line to populate either the 'team' or 'rooms'.
