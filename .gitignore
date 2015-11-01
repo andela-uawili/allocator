@@ -38,8 +38,10 @@ htmlcov/
 .tox/
 .cache
 nosetests.xml
-*,cover
 allocator-nosetests-coverage.png
+*,cover
+
+# sublime
 *.sublime-project
 *.sublime-workspace
 
