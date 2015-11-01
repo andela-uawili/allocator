@@ -1,4 +1,4 @@
-# Allocator
+# Allocator [![Build Status](https://travis-ci.org/andela-uawili/amity-room-allocation.svg?branch=master)](https://travis-ci.org/andela-uawili/amity-room-allocation)
 Python program to allocate people to rooms in Andela's Amity.
 
 ## Installation
