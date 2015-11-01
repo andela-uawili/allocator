@@ -40,7 +40,6 @@ htmlcov/
 nosetests.xml
 allocator-nosetests-coverage.png
 *,cover
-
 # sublime
 *.sublime-project
 *.sublime-workspace
